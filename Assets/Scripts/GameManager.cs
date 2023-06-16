@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     static public GameManager Instance;
 
     static public event Action OnGameStarted;
+    static public event Action OnGameEnded;
 
     public enum GameState
     {
@@ -29,6 +31,8 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
+
+        Application.targetFrameRate = 60;
     }
 
     void Start()
@@ -49,6 +53,14 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
+        VibrationManager.VibrateFailure();
         CurrentGameState = GameState.GameOver;
+        CameraController.Instance.Shake(0.3f, 0.25f);
+        OnGameEnded?.Invoke();
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadSceneAsync(0);
     }
 }

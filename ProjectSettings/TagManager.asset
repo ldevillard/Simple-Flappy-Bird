@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - PipeTeleport
+  - Pipe
   layers:
   - Default
   - TransparentFX

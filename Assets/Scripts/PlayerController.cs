@@ -1,16 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
     public float jumpForce = 200;
     public float rotationSpeed = 3.0f;
 
+    public Animator anim;
     public Rigidbody2D rb;
 
     bool isReady;
     bool isDead;
+
 
     void Start()
     {
@@ -28,6 +31,11 @@ public class PlayerController : MonoBehaviour
     {
         isReady = true;
         rb.bodyType = RigidbodyType2D.Dynamic;
+
+        rb.velocity = Vector2.zero;
+        rb.AddForce(new Vector2(0, jumpForce));
+
+        VibrationManager.VibrateMedium();
     }
 
     void Update()
@@ -53,6 +61,7 @@ public class PlayerController : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
+                VibrationManager.VibrateMedium();
                 rb.velocity = Vector2.zero;
                 rb.AddForce(new Vector2(0, jumpForce));
             }
@@ -64,8 +73,16 @@ public class PlayerController : MonoBehaviour
         if (isDead)
             return;
         isDead = true;
-        rb.bodyType = RigidbodyType2D.Static;
-
+        anim.speed = 0;
+        transform.DORotate(new Vector3(0, 0, -90), 0.5f);
         GameManager.Instance.GameOver();
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Pipe"))
+        {
+            ScoreManager.Instance.AddScore();
+        }
     }
 }

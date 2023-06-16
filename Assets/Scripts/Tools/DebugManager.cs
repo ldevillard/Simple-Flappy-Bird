@@ -18,7 +18,7 @@ public class DebugManager : MonoBehaviour
 
         if (Input.GetKeyDown(ResetInput))
         {
-            SceneManager.LoadSceneAsync(0);
+            GameManager.Instance.RestartGame();
         }
     }
 #endif

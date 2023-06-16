@@ -12,6 +12,13 @@ public class Pipe : MonoBehaviour
 
     bool isReady;
 
+    public Collider2D[] colliders;
+
+    void Awake()
+    {
+        GameManager.OnGameEnded += HandleGameEnded;
+    }
+
     void Start()
     {
         speed = GameManager.Instance.speedPipe;
@@ -19,7 +26,18 @@ public class Pipe : MonoBehaviour
         numberPipes = GameManager.Instance.numberPipes;
 
         StartPositionY = transform.position.y;
-        UpdatePosition();
+        transform.position = new Vector3(transform.position.x, StartPositionY + Random.Range(-2, 2), transform.position.z);
+    }
+
+    void OnDestroy()
+    {
+        GameManager.OnGameEnded -= HandleGameEnded;
+    }
+
+    void HandleGameEnded()
+    {
+        foreach (Collider2D collider in colliders)
+            collider.enabled = false;
     }
 
     void Update()
@@ -28,17 +46,9 @@ public class Pipe : MonoBehaviour
             transform.Translate(Vector3.left * speed * Time.deltaTime);
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    public void UpdatePosition()
     {
-        if (other.CompareTag("PipeTeleport"))
-        {
-            transform.position = new Vector3(transform.position.x + (numberPipes * distanceBetweenPipes), transform.position.y, transform.position.z);
-            UpdatePosition();
-        }
-    }
-
-    void UpdatePosition()
-    {
+        transform.position = new Vector3(transform.position.x + (numberPipes * distanceBetweenPipes), transform.position.y, transform.position.z);
         transform.position = new Vector3(transform.position.x, StartPositionY + Random.Range(-2, 2), transform.position.z);
     }
 }
