@@ -53,7 +53,6 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        VibrationManager.VibrateFailure();
         CurrentGameState = GameState.GameOver;
         CameraController.Instance.Shake(0.3f, 0.25f);
         OnGameEnded?.Invoke();

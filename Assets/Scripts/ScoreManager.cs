@@ -17,11 +17,21 @@ public class ScoreManager : MonoBehaviour
     void Start()
     {
         score = 0;
+        if (PlayerPrefs.HasKey("HighScore"))
+            highScore = PlayerPrefs.GetInt("HighScore");
+        else
+            highScore = 0;
     }
 
     public void AddScore()
     {
         score++;
         UIManager.Instance.UpdateScore(score);
+
+        if (score > highScore)
+        {
+            highScore = score;
+            PlayerPrefs.SetInt("HighScore", highScore);
+        }
     }
 }

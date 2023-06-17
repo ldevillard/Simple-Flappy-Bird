@@ -35,7 +35,6 @@ public class PlayerController : MonoBehaviour
         rb.velocity = Vector2.zero;
         rb.AddForce(new Vector2(0, jumpForce));
 
-        VibrationManager.VibrateMedium();
     }
 
     void Update()
@@ -61,14 +60,16 @@ public class PlayerController : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
-                VibrationManager.VibrateMedium();
                 rb.velocity = Vector2.zero;
                 rb.AddForce(new Vector2(0, jumpForce));
             }
+
+            if (transform.position.y > 7)
+                Die();
         }
     }
 
-    void OnCollisionEnter2D(Collision2D other)
+    void Die()
     {
         if (isDead)
             return;
@@ -76,6 +77,11 @@ public class PlayerController : MonoBehaviour
         anim.speed = 0;
         transform.DORotate(new Vector3(0, 0, -90), 0.5f);
         GameManager.Instance.GameOver();
+    }
+
+    void OnCollisionEnter2D(Collision2D other)
+    {
+        Die();
     }
 
     void OnTriggerExit2D(Collider2D other)
